@@ -32,11 +32,14 @@ const BuggyCart: React.FC = () => {
 
   // 버그가 있는 Handler
   const handleIncreaseQuantity = (itemId: number) => {
-    const itemToUpdate = items.find(item => item.id === itemId);
-    if (itemToUpdate) {
-      itemToUpdate.quantity += 1;
-      setItems(items);
-    }
+    setItems((prev) => {
+      const itemFound = prev.filter((item) => itemId === item.id);
+      let restItems = prev.filter((item) => itemId !== item.id);
+      itemFound[0].quantity += 1;
+      restItems = restItems.concat(itemFound);
+      restItems.sort((a: CartItem, b: CartItem) => a.id - b.id);
+      return restItems;
+    });
   };
 
   const totalPrice = useMemo(() => {
@@ -49,16 +52,19 @@ const BuggyCart: React.FC = () => {
       <h2>과제 4: 버그 수정하기</h2>
       <div className={styles.description}>
         <p>
-          <code>BuggyCart.tsx</code>의 <code>handleIncreaseQuantity</code> 함수를 수정하여,
+          <code>BuggyCart.tsx</code>의 <code>handleIncreaseQuantity</code>{' '}
+          함수를 수정하여,
           <br />
           수량 변경 시 총가격이 즉시 업데이트되도록 만드세요.
         </p>
       </div>
       <ul className={styles.itemList}>
-        {items.map(item => (
+        {items.map((item) => (
           <li key={item.id} className={styles.item}>
             <span className={styles.itemName}>{item.name}</span>
-            <span className={styles.itemPrice}>{item.price.toLocaleString()}원</span>
+            <span className={styles.itemPrice}>
+              {item.price.toLocaleString()}원
+            </span>
             <div className={styles.quantityControl}>
               <span>수량: {item.quantity}</span>
               <button onClick={() => handleIncreaseQuantity(item.id)}>+</button>
