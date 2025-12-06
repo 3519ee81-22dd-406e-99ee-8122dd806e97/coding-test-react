@@ -1,0 +1,31 @@
+.profileHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 44px;
+}
+
+.avatarContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin-right: 30px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userInfoContainer {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.username {
+  font-size: 28px;
+  font-weight: 300;
+}
