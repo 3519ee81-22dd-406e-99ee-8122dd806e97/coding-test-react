@@ -36,6 +36,7 @@ const BuggyCart: React.FC = () => {
     
     if (itemToUpdate) {
       setItems(items.map((el)=> {
+        // items를 맵으로 돌려 배열 아이템과 클릭해 받아온 id를 비교하여 일치하는 항목만 quantity가 수정되도록 했습니다.
         return el.id === itemId ? {...el, quantity:el.quantity + 1} : el
       }))
     }
