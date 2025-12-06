@@ -33,10 +33,14 @@ const BuggyCart: React.FC = () => {
   // 버그가 있는 Handler
   const handleIncreaseQuantity = (itemId: number) => {
     const itemToUpdate = items.find(item => item.id === itemId);
+    
     if (itemToUpdate) {
-      itemToUpdate.quantity += 1;
-      setItems(items);
+      setItems(items.map((el)=> {
+        // items를 맵으로 돌려 배열 아이템과 클릭해 받아온 id를 비교하여 일치하는 항목만 quantity가 수정되도록 했습니다.
+        return el.id === itemId ? {...el, quantity:el.quantity + 1} : el
+      }))
     }
+    console.log("itemToUpdate: ", itemToUpdate)
   };
 
   const totalPrice = useMemo(() => {
