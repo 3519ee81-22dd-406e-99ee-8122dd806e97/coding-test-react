@@ -17,6 +17,7 @@ import styles from './CodeReviewChallenge.module.css';
  * - (주의: 이 과제는 코드 리뷰 능력을 중점적으로 보기 때문에, 리뷰 작성 없이 리팩토링만 진행하면 안 됩니다.)
  */
 
+// type 폴더에 분리하는 것이 좋을 것 같습니다.
 type UserData = {
   id: number;
   name: string;
@@ -25,6 +26,7 @@ type UserData = {
 };
 
 // 가짜 API 호출 함수
+// hooks로 fetch를 분리하는 것이 좋을 것 같습니다.
 const fetchUsers = (): Promise<UserData[]> => {
   return new Promise(resolve => {
     setTimeout(() => {
@@ -41,6 +43,7 @@ const fetchUsers = (): Promise<UserData[]> => {
 };
 
 const UserList = () => {
+  //  useState: users의 상태를 any 타입으로 지정하는 것이 아닌 상단에 UserData를 사용하면 좋을 것 같습니다.
   const [users, setUsers] = useState<any[]>([]); // state 1
   const [filter, setFilter] = useState(''); // state 2
   const [loading, setLoading] = useState(true); // state 3
@@ -54,19 +57,21 @@ const UserList = () => {
     });
   }, []);
 
-    // 필터링 로직
+  // 필터링 로직
+  //adminMatches로만 필터링 할 수 있을 것 같습니다.
   const filteredUsers = users.filter(user => {
-      const nameMatches = user.name.includes(filter);
-      const emailMatches = user.email.includes(filter);
-      const adminMatches = !showAdminsOnly || user.isAdmin;
-      return (nameMatches || emailMatches) && adminMatches;
-    });
+    const nameMatches = user.name.includes(filter);
+    const emailMatches = user.email.includes(filter);
+    const adminMatches = !showAdminsOnly || user.isAdmin;
+    return (nameMatches || emailMatches) && adminMatches;
+  });
 
   return (
     <div className={styles.container}>
       <h2>과제 5: 코드 리뷰하기</h2>
       <p className={styles.description}>
-        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로 작성해주세요.
+        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로
+        작성해주세요.
       </p>
 
       <div className={styles.controls}>

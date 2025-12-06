@@ -14,13 +14,26 @@
  * @param delay 디바운스 시간 (밀리초)
  * @returns 디바운싱된 새로운 함수
  */
-export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
-  // 여기에 debounce 로직을 구현하세요.
-  // Hint: 클로저를 사용하여 타이머 ID를 관리해야 합니다.
-  return function(...args: Parameters<T>) {
-    // @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number,
+): (...args: Parameters<T>) => void {
+  // 클로저로 timeId를 유지
+  let timerId: ReturnType<typeof setTimeout> | null = null;
+
+  return function (...args: Parameters<T>) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const context = this;
-    // ...
-    func.apply(context, args);
+
+    // 기존의 실행이 있다면 실행 취소
+    if (timerId !== null) {
+      clearTimeout(timerId);
+    }
+
+    // delay 동안 추가 호출이 없다면 함수 실행
+    timerId = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
   };
 }
