@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import styles from './CodeReviewChallenge.module.css';
+import React, { useEffect, useState } from "react";
+import styles from "./CodeReviewChallenge.module.css";
 
 /**
  * ## 과제 5: 코드 리뷰
@@ -26,61 +26,70 @@ type UserData = {
 
 // 가짜 API 호출 함수
 const fetchUsers = (): Promise<UserData[]> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
-        { id: 1, name: '김철수', email: 'chulsoo@example.com', isAdmin: false },
-        { id: 2, name: '이영희', email: 'younghee@example.com', isAdmin: true },
-        { id: 3, name: '스티브', email: 'steve@example.com', isAdmin: false },
-        { id: 4, name: '관리자', email: 'admin@example.com', isAdmin: true },
-        { id: 5, name: 'Steve Jobs', email: 'sj@apple.com', isAdmin: false },
-        { id: 6, name: 'Apple Mint', email: 'mint@gmail.com', isAdmin: false },
+        { id: 1, name: "김철수", email: "chulsoo@example.com", isAdmin: false },
+        { id: 2, name: "이영희", email: "younghee@example.com", isAdmin: true },
+        { id: 3, name: "스티브", email: "steve@example.com", isAdmin: false },
+        { id: 4, name: "관리자", email: "admin@example.com", isAdmin: true },
+        { id: 5, name: "Steve Jobs", email: "sj@apple.com", isAdmin: false },
+        { id: 6, name: "Apple Mint", email: "mint@gmail.com", isAdmin: false },
       ]);
     }, 500);
   });
 };
 
 const UserList = () => {
-  const [users, setUsers] = useState<any[]>([]); // state 1
-  const [filter, setFilter] = useState(''); // state 2
+  const [users, setUsers] = useState<UserData[]>([]); // state 1
+  // 우선 any 타입은 되도록 사용하지 않아야됩니다. any 타입은 모든 타입을 허용하기 때문에, 추후 리팩토링 및 디버깅시에
+  // 부정적인 영향을 줄 수 있습니다. 그래서 이를 user 타입을 명시하여 가독성과 생산성을 확보해야 합니다.
+
+  const [filter, setFilter] = useState(""); // state 2
   const [loading, setLoading] = useState(true); // state 3
   const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
 
   // 데이터 로딩
   useEffect(() => {
-    fetchUsers().then(data => {
+    fetchUsers().then((data) => {
       setUsers(data);
       setLoading(false);
+      // 로딩 스켈레톤을 렌더링하는 변수입니다. 다만 이렇게 되면 서버에서 데이터를 불러올 때 에러가 발생할 시
+      // 사용자는 로딩화면을 계속해서 보아야 합니다. 이를 개선하기 위해선 비동기 함수의 finaly로 처리하여
+      // 정상과 오류 상황일 때 무조건 실행되게 해야 합니다.
     });
   }, []);
 
-    // 필터링 로직
-  const filteredUsers = users.filter(user => {
-      const nameMatches = user.name.includes(filter);
-      const emailMatches = user.email.includes(filter);
-      const adminMatches = !showAdminsOnly || user.isAdmin;
-      return (nameMatches || emailMatches) && adminMatches;
-    });
+  // 필터링 로직
+  const filteredUsers = users.filter((user) => {
+    const nameMatches = user.name.includes(filter);
+    const emailMatches = user.email.includes(filter);
+    const adminMatches = !showAdminsOnly || user.isAdmin;
+    return (nameMatches || emailMatches) && adminMatches;
+  });
 
   return (
     <div className={styles.container}>
       <h2>과제 5: 코드 리뷰하기</h2>
       <p className={styles.description}>
-        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로 작성해주세요.
+        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로
+        작성해주세요.
       </p>
 
       <div className={styles.controls}>
         <input
           type="text"
           placeholder="이름으로 검색..."
-          onChange={e => setFilter(e.target.value)}
+          onChange={(e) => setFilter(e.target.value)}
+          // 검새에서 단순 useState로 검색 기능을 정의하면 서버에 과부하를 줄 수 있습니다.
+          // 이전 문제에 나온 디바운스를 적용하면 이를 해결할 수 있습니다.
           className={styles.input}
         />
         <label>
           <input
             type="checkbox"
             checked={showAdminsOnly}
-            onChange={e => setShowAdminsOnly(e.target.checked)}
+            onChange={(e) => setShowAdminsOnly(e.target.checked)}
           />
           관리자만 보기
         </label>
@@ -98,13 +107,13 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map(u => (
+            {filteredUsers.map((u) => (
               <tr key={u.id}>
                 <td>{u.name}</td>
                 <td>{u.email}</td>
                 {/* 역할(Role) 표시 */}
-                <td style={{ color: u.isAdmin ? 'blue' : 'black' }}>
-                  {u.isAdmin ? 'Admin' : 'User'}
+                <td style={{ color: u.isAdmin ? "blue" : "black" }}>
+                  {u.isAdmin ? "Admin" : "User"}
                 </td>
               </tr>
             ))}
