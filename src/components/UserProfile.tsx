@@ -1,5 +1,8 @@
-import React from 'react';
-import styles from './UserProfile.module.css';
+import React from "react";
+import PostCard from "./post/PostCard";
+import ContentStatusDisplay from "./user/ContentStatusDisplay";
+import UserAvatar from "./user/UserAvatar";
+import styles from "./UserProfile.module.css";
 
 // --- 데이터 타입 정의 ---
 interface User {
@@ -47,9 +50,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
       <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
-        </div>
+        <UserAvatar url={user.avatarUrl} alt={user.name} />
         <div className={styles.userInfoContainer}>
           <h2 className={styles.username}>{user.username}</h2>
           <button className={styles.editProfileButton}>프로필 편집</button>
@@ -64,26 +65,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
 
       {/* 3. 사용자 통계 */}
       <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
+        <ContentStatusDisplay title="게시물" counts={stats.posts} />
+        <ContentStatusDisplay title="팔로워" counts={stats.followers} />
+        <ContentStatusDisplay title="팔로잉" counts={stats.following} />
       </section>
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
-        {posts.map(post => (
-          <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-          </div>
+        {posts.map((post) => (
+          <PostCard post={post} />
         ))}
       </main>
     </div>
