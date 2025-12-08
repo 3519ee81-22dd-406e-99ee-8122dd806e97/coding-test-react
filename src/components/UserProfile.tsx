@@ -1,5 +1,7 @@
-import React from 'react';
-import styles from './UserProfile.module.css';
+import React from "react";
+import styles from "./UserProfile.module.css";
+import Avatar from "./firstProblem/Avatar";
+import PostItem from "./firstProblem/PostItem";
 
 // --- 데이터 타입 정의 ---
 interface User {
@@ -47,9 +49,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
       <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
-        </div>
+        <Avatar avatarUrl={user.avatarUrl} name={user.name} />
         <div className={styles.userInfoContainer}>
           <h2 className={styles.username}>{user.username}</h2>
           <button className={styles.editProfileButton}>프로필 편집</button>
@@ -80,10 +80,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
-        {posts.map(post => (
-          <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-          </div>
+        {posts.map((post) => (
+          <PostItem
+            key={post.id}
+            imageUrl={post.imageUrl}
+            caption={post.caption}
+          />
         ))}
       </main>
     </div>
