@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './UserProfile.module.css';
+import React from "react";
+import styles from "./UserProfile.module.css";
 
 // --- 데이터 타입 정의 ---
 interface User {
@@ -42,13 +42,18 @@ interface UserProfileProps {
  * 4. CSS 모듈을 사용하여 스타일을 관리하세요.
  *
  */
-const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
+
+const UserSection = ({ user }: { user: User }) => {
   return (
-    <div className={styles.profileContainer}>
+    <>
       {/* 1. 프로필 헤더 */}
       <header className={styles.profileHeader}>
         <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
+          <img
+            src={user.avatarUrl}
+            alt={`${user.name}'s avatar`}
+            className={styles.avatar}
+          />
         </div>
         <div className={styles.userInfoContainer}>
           <h2 className={styles.username}>{user.username}</h2>
@@ -61,7 +66,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
         <h1 className={styles.name}>{user.name}</h1>
         <p className={styles.bio}>{user.bio}</p>
       </section>
+    </>
+  );
+};
 
+const UserStatsSection = ({ stats }: { stats: UserStats }) => {
+  return (
+    <>
       {/* 3. 사용자 통계 */}
       <section className={styles.statsSection}>
         <div className={styles.statItem}>
@@ -77,15 +88,35 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
           <span className={styles.statLabel}>팔로잉</span>
         </div>
       </section>
+    </>
+  );
+};
 
+const UserPostsSection = ({ posts }: { posts: Post[] }) => {
+  return (
+    <>
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
-        {posts.map(post => (
+        {posts.map((post) => (
           <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
+            <img
+              src={post.imageUrl}
+              alt={post.caption}
+              className={styles.postImage}
+            />
           </div>
         ))}
       </main>
+    </>
+  );
+};
+
+const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
+  return (
+    <div className={styles.profileContainer}>
+      <UserSection user={user} />
+      <UserStatsSection stats={stats} />
+      <UserPostsSection posts={posts} />
     </div>
   );
 };
