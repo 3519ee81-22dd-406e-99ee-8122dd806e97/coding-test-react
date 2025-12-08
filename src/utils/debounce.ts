@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 /**
  * ## 비동기 문제 2: Debounce 함수 구현
  *
@@ -14,13 +16,30 @@
  * @param delay 디바운스 시간 (밀리초)
  * @returns 디바운싱된 새로운 함수
  */
-export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): (...args: Parameters<T>) => void {
   // 여기에 debounce 로직을 구현하세요.
   // Hint: 클로저를 사용하여 타이머 ID를 관리해야 합니다.
-  return function(...args: Parameters<T>) {
+  return function (...args: Parameters<T>) {
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const context = this;
+    const timerRef = useRef<number | null>(null);
     // ...
-    func.apply(context, args);
+
+    useEffect(() => {
+      if (!timerRef.current) return;
+      timerRef.current = setTimeout(() => {
+        func.apply(context, args);
+      }, delay);
+
+      return () => {
+        if (typeof timerRef.current === "number") {
+          clearTimeout(timerRef.current);
+        }
+      };
+    }, [timerRef.current, delay, context]);
   };
 }
