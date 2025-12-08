@@ -25,7 +25,7 @@ function PostGrid({ posts }: PostGridProps) {
   return (
     <main className={styles.postsGrid}>
       {posts.map((post) => (
-        <PostCard post={post} />
+        <PostCard key={post.id} post={post} />
       ))}
     </main>
   );
