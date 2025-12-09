@@ -51,8 +51,9 @@ const UserList = () => {
   // 데이터 로딩
   // 최초의 한번 useEffect를 사용해 부수효과를 처리하고있는데 메소드 체이닝으로 fetchUsers가 완료된 뒤에
   // 상태를 변경하고 로딩 상태를 변경하기를 원하고 있지만 실제로는 좋은 방법이 아니다.(API 오류로 사이드 이펙트를 발생 시킬 수 있음)
-  // useEffect의 dependency를 조정하여 처리하는 방식이나
-  // ReactQuery를 활용해 서버 상태를 추적하는 방식으로 값을 처리하는게 더 효율적이고 직관적이다.
+  //fetchUsers 실패 시 로딩 상태가 영원히 true로 남고, 사용자에게 오류가 노출되지 않음
+  // Promise.then 체인은 가독성도 떨어짐
+  // async/await + try/catch 적용 및 실패 시 로딩 false 처리
   useEffect(() => {
     fetchUsers().then((data) => {
       setUsers(data);
