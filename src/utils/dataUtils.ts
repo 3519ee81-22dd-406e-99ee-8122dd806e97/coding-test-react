@@ -75,9 +75,14 @@ export const addIsAdultProperty = (users: User[]): (User & { isAdult: boolean })
 
 // 문제 7: 카테고리별 상품 총액 계산
 export const getCategoryTotals = (products: Product[]): CategorySummary => {
-  return {};
+  return products.reduce<CategorySummary>((acc, product) => {
+    if (!acc[product.category]) {
+      acc[product.category] = { totalPrice: 0 };
+    }
+    acc[product.category].totalPrice += product.price * product.stock;
+    return acc;
+  }, {});
 };
-
 // 문제 8: 두 사용자 배열 병합 및 중복 제거 (중복이 있는 경우 users2 내의 사용자를 사용합니다)
 export const mergeAndDeduplicateUsers = (users1: User[], users2: User[]): User[] => {
   return [];
@@ -90,5 +95,14 @@ export const findUsersByTag = (users: User[], tag: string): User[] => {
 
 // 문제 10: 부서별 사용자 통계 집계
 export const getDepartmentSummary = (users: User[]): DepartmentSummary => {
-  return {};
+  return users.reduce<DepartmentSummary>((acc, user) => {
+    if (!acc[user.department]) {
+      acc[user.department] = { userCount: 0, averageAge: 0 };
+    }
+    const dept = acc[user.department];
+    dept.userCount += 1;
+    dept.averageAge += user.age;
+
+    return acc;
+  }, {});
 };
