@@ -40,8 +40,16 @@ interface UserStats {
   stats: UserStats;
 }
 
+interface UserStatsItem {
+  stats: UserStats;
+}
+
 interface PostsGrid {
   posts: Post[];
+}
+
+interface PostItem {
+  post: Post;
 }
 
 /**
@@ -119,21 +127,26 @@ const UserBio: React.FC<UserBio> = ({ user }) => {
 const UserStats: React.FC<UserStats> = ({ stats }) => {
   return (
     <section className={styles.statsSection}>
-      <div className={styles.statItem}>
+      <UserStatsItem>
         <span className={styles.statValue}>{stats.posts}</span>
         <span className={styles.statLabel}>게시물</span>
-      </div>
-      <div className={styles.statItem}>
+      </UserStatsItem>
+      <UserStatsItem>
         <span className={styles.statValue}>{stats.followers}</span>
         <span className={styles.statLabel}>팔로워</span>
-      </div>
-      <div className={styles.statItem}>
+      </UserStatsItem>
+      <UserStatsItem>
         <span className={styles.statValue}>{stats.following}</span>
         <span className={styles.statLabel}>팔로잉</span>
-      </div>
+      </UserStatsItem>
     </section>
   );
 };
+
+// 3-1. 사용자 통계 아이템
+function UserStatsItem({ children }) {
+  return <div className={styles.statItem}>{children}</div>;
+}
 
 // 4. 게시물 그리드
 const PostsGrid: React.FC<PostsGrid> = ({ posts }) => {
@@ -141,14 +154,22 @@ const PostsGrid: React.FC<PostsGrid> = ({ posts }) => {
     <main className={styles.postsGrid}>
       {posts.map((post) => (
         <div key={post.id} className={styles.postItem}>
-          <img
+          {/* <img
             src={post.imageUrl}
             alt={post.caption}
             className={styles.postImage}
-          />
+          /> */}
+          <PostItem post={post} />
         </div>
       ))}
     </main>
+  );
+};
+
+// 4-1. 게시물 포스트 아이템
+const PostItem: React.FC<PostItem> = ({ post }) => {
+  return (
+    <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
   );
 };
 
