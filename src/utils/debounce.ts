@@ -23,7 +23,6 @@ export function debounce<T extends (...args: any[]) => any>(func: T, delay: numb
       func(...args);
       timerId = null;
     }, delay);
-
     func.apply(context, args);
   };
 }

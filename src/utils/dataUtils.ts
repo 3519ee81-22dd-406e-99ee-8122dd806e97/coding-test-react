@@ -43,24 +43,23 @@ export interface PaginatedResult<T> {
   currentPage: number;
 }
 
-
 // 문제 1: 활성 사용자 필터링
 export const filterActiveUsers = (users: User[]): User[] => {
-  return [];
+  return users.filter((user) => user.isActive === true);
 };
 
 // 문제 2: ID로 사용자 찾기
 export const findUserById = (users: User[], id: number): User | undefined => {
-  return undefined;
+  return users.find((user) => user.id === id);
 };
 
 // 문제 3: 사용자 이름을 ID 맵으로 변환
 export const createUserMap = (users: User[]): { [id: number]: string } => {
-  return {};
+  return users.map((user) => user.name);
 };
 
 // 문제 4: 키를 기준으로 배열 정렬
-export const sortArrayByKey = <T>(array: T[], key: keyof T, order: 'asc' | 'desc'): T[] => {
+export const sortArrayByKey = <T>(array: T[], key: keyof T, order: "asc" | "desc"): T[] => {
   return [];
 };
 
