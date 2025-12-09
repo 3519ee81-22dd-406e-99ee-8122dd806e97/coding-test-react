@@ -28,6 +28,22 @@ interface UserProfileProps {
   posts: Post[];
 }
 
+interface ProfileHeader {
+  user: User;
+}
+
+interface UserBio {
+  user: User;
+}
+
+interface UserStats {
+  stats: UserStats;
+}
+
+interface PostsGrid {
+  posts: Post[];
+}
+
 /**
  * ## UI 문제 1: 컴포넌트 리팩토링
  *
@@ -47,70 +63,31 @@ interface UserProfileProps {
 "JSX.IntrinsicElements"가 존재하지 않는다고 뜨는 것으로 보아,
 typeScript와 관련한 문제인 것으로 판단됩니다.
 "React.FC<UserProfileProps>"와 같이 데이터 타입 정의 후 해당 타입을 사용하는 것이 필요할 것으로 판단됩니다.
+
+기존 UserProfile 과 유사한 형태로 데이터 타입 정의 후 해당 타입 사용을 시도,
+Chrome DevTools 확인 후 각 컴포넌트의 이름 시작을 대문자로 변경하니 정상적으로 작동합니다. 
 */
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
-      {/* <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img
-            src={user.avatarUrl}
-            alt={`${user.name}'s avatar`}
-            className={styles.avatar}
-          />
-        </div>
-        <div className={styles.userInfoContainer}>
-          <h2 className={styles.username}>{user.username}</h2>
-          <button className={styles.editProfileButton}>프로필 편집</button>
-        </div>
-      </header> */}
-      <profileHeader user={user} />
+      <ProfileHeader user={user} />
 
       {/* 2. 사용자 정보 */}
-      {/* <section className={styles.userInfoSection}>
-        <h1 className={styles.name}>{user.name}</h1>
-        <p className={styles.bio}>{user.bio}</p>
-      </section> */}
-      <userBio user={user} />
+      <UserBio user={user} />
 
       {/* 3. 사용자 통계 */}
-      {/* <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
-      </section> */}
-      <userStats stats={stats} />
+      <UserStats stats={stats} />
 
       {/* 4. 게시물 그리드 */}
-      {/* <main className={styles.postsGrid}>
-        {posts.map((post) => (
-          <div key={post.id} className={styles.postItem}>
-            <img
-              src={post.imageUrl}
-              alt={post.caption}
-              className={styles.postImage}
-            />
-          </div>
-        ))}
-      </main> */}
-      <postsGrid posts={posts} />
+      <PostsGrid posts={posts} />
     </div>
   );
 };
 
 // 1. 프로필 헤더
-function profileHeader({ user }) {
+const ProfileHeader: React.FC<ProfileHeader> = ({ user }) => {
   return (
     <header className={styles.profileHeader}>
       <div className={styles.avatarContainer}>
@@ -126,60 +103,53 @@ function profileHeader({ user }) {
       </div>
     </header>
   );
-}
+};
 
 // 2. 사용자 정보
-function userBio({ user }) {
+const UserBio: React.FC<UserBio> = ({ user }) => {
   return (
     <section className={styles.userInfoSection}>
       <h1 className={styles.name}>{user.name}</h1>
       <p className={styles.bio}>{user.bio}</p>
     </section>
   );
-}
+};
 
 // 3. 사용자 통계
-function userStats({ stats }) {
+const UserStats: React.FC<UserStats> = ({ stats }) => {
   return (
     <section className={styles.statsSection}>
-      <userStatsItem>
+      <div className={styles.statItem}>
         <span className={styles.statValue}>{stats.posts}</span>
         <span className={styles.statLabel}>게시물</span>
-      </userStatsItem>
-      <userStatsItem>
+      </div>
+      <div className={styles.statItem}>
         <span className={styles.statValue}>{stats.followers}</span>
         <span className={styles.statLabel}>팔로워</span>
-      </userStatsItem>
-      <userStatsItem>
+      </div>
+      <div className={styles.statItem}>
         <span className={styles.statValue}>{stats.following}</span>
         <span className={styles.statLabel}>팔로잉</span>
-      </userStatsItem>
+      </div>
     </section>
   );
-}
-
-// 3-1. 사용자 통계 아이템
-function userStatsItem({ children }) {
-  return <div className={styles.statItem}>{children}</div>;
-}
+};
 
 // 4. 게시물 그리드
-function postsGrid({ posts }) {
+const PostsGrid: React.FC<PostsGrid> = ({ posts }) => {
   return (
     <main className={styles.postsGrid}>
       {posts.map((post) => (
         <div key={post.id} className={styles.postItem}>
-          <postItem post={post} />
+          <img
+            src={post.imageUrl}
+            alt={post.caption}
+            className={styles.postImage}
+          />
         </div>
       ))}
     </main>
   );
-}
+};
 
-// 4-1. 게시물 포스트 아이템
-function postItem({ post }) {
-  return (
-    <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-  );
-}
 export default UserProfile;
