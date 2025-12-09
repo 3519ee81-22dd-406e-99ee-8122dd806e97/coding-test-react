@@ -15,12 +15,15 @@
  * @returns 디바운싱된 새로운 함수
  */
 export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
-  // 여기에 debounce 로직을 구현하세요.
-  // Hint: 클로저를 사용하여 타이머 ID를 관리해야 합니다.
-  return function(...args: Parameters<T>) {
-    // @ts-ignore
-    const context = this;
-    // ...
+  let timerId = null;
+  return function (...args: Parameters<T>) {
+    if (timerId) clearTimeout(timerId);
+
+    timerId = setTimeout(() => {
+      func(...args);
+      timerId = null;
+    }, delay);
+
     func.apply(context, args);
   };
 }
