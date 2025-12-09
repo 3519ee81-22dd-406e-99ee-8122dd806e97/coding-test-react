@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import styles from './BuggyCart.module.css';
+import React, { useState, useMemo } from "react";
+import styles from "./BuggyCart.module.css";
 
 /**
  * ## 과제 4: 버그 수정 (고급)
@@ -22,9 +22,9 @@ export interface CartItem {
 }
 
 const initialItems: CartItem[] = [
-  { id: 1, name: 'React 후드티', price: 35000, quantity: 1 },
-  { id: 2, name: 'TypeScript 티셔츠', price: 28000, quantity: 2 },
-  { id: 3, name: 'Vite 머그컵', price: 15000, quantity: 1 },
+  { id: 1, name: "React 후드티", price: 35000, quantity: 1 },
+  { id: 2, name: "TypeScript 티셔츠", price: 28000, quantity: 2 },
+  { id: 3, name: "Vite 머그컵", price: 15000, quantity: 1 },
 ];
 
 const BuggyCart: React.FC = () => {
@@ -32,15 +32,11 @@ const BuggyCart: React.FC = () => {
 
   // 버그가 있는 Handler
   const handleIncreaseQuantity = (itemId: number) => {
-    const itemToUpdate = items.find(item => item.id === itemId);
-    if (itemToUpdate) {
-      itemToUpdate.quantity += 1;
-      setItems(items);
-    }
+    setItems((prevItems) => prevItems.map((item) => (item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item)));
   };
 
   const totalPrice = useMemo(() => {
-    console.log('총가격을 다시 계산합니다...');
+    console.log("총가격을 다시 계산합니다...");
     return items.reduce((total, item) => total + item.price * item.quantity, 0);
   }, [items]);
 
@@ -55,7 +51,7 @@ const BuggyCart: React.FC = () => {
         </p>
       </div>
       <ul className={styles.itemList}>
-        {items.map(item => (
+        {items.map((item) => (
           <li key={item.id} className={styles.item}>
             <span className={styles.itemName}>{item.name}</span>
             <span className={styles.itemPrice}>{item.price.toLocaleString()}원</span>
@@ -66,9 +62,7 @@ const BuggyCart: React.FC = () => {
           </li>
         ))}
       </ul>
-      <div className={styles.totalPrice}>
-        총가격: {totalPrice.toLocaleString()}원
-      </div>
+      <div className={styles.totalPrice}>총가격: {totalPrice.toLocaleString()}원</div>
     </div>
   );
 };
