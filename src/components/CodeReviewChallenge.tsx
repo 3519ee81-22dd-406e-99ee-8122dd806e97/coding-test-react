@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import styles from './CodeReviewChallenge.module.css';
+import React, { useEffect, useState } from "react";
+import styles from "./CodeReviewChallenge.module.css";
+import Controls from "./codeReviewChallenge/Controls";
+import Table from "./codeReviewChallenge/Table";
 
 /**
  * ## 과제 5: 코드 리뷰
@@ -26,91 +28,63 @@ type UserData = {
 
 // 가짜 API 호출 함수
 const fetchUsers = (): Promise<UserData[]> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
-        { id: 1, name: '김철수', email: 'chulsoo@example.com', isAdmin: false },
-        { id: 2, name: '이영희', email: 'younghee@example.com', isAdmin: true },
-        { id: 3, name: '스티브', email: 'steve@example.com', isAdmin: false },
-        { id: 4, name: '관리자', email: 'admin@example.com', isAdmin: true },
-        { id: 5, name: 'Steve Jobs', email: 'sj@apple.com', isAdmin: false },
-        { id: 6, name: 'Apple Mint', email: 'mint@gmail.com', isAdmin: false },
+        { id: 1, name: "김철수", email: "chulsoo@example.com", isAdmin: false },
+        { id: 2, name: "이영희", email: "younghee@example.com", isAdmin: true },
+        { id: 3, name: "스티브", email: "steve@example.com", isAdmin: false },
+        { id: 4, name: "관리자", email: "admin@example.com", isAdmin: true },
+        { id: 5, name: "Steve Jobs", email: "sj@apple.com", isAdmin: false },
+        { id: 6, name: "Apple Mint", email: "mint@gmail.com", isAdmin: false },
       ]);
     }, 500);
   });
 };
 
 const UserList = () => {
-  const [users, setUsers] = useState<any[]>([]); // state 1
-  const [filter, setFilter] = useState(''); // state 2
+  // 상단에 userData에 대한 타입이 있기 때문에 any 타입을 UserData 타입으로 변경하는 게 좋아보입니다.
+  const [users, setUsers] = useState<UserData[]>([]); // state 1
+  // filter라는 변수명보다 keyword라는 변수명으로 조금 더 직관적인 변수명을 사용하는 게 좋다고 생각합니다.
+  const [keyword, setKeyword] = useState(""); // state 2
   const [loading, setLoading] = useState(true); // state 3
   const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
 
   // 데이터 로딩
+  // 비동기 요청의 에러 처리 코드가 없어 요청 실패시 서비스가 정상적으로 작동하지 않을 위험이 있다고 생각합니다.
   useEffect(() => {
-    fetchUsers().then(data => {
+    fetchUsers().then((data) => {
       setUsers(data);
       setLoading(false);
     });
   }, []);
 
-    // 필터링 로직
-  const filteredUsers = users.filter(user => {
-      const nameMatches = user.name.includes(filter);
-      const emailMatches = user.email.includes(filter);
-      const adminMatches = !showAdminsOnly || user.isAdmin;
-      return (nameMatches || emailMatches) && adminMatches;
-    });
+  // 필터링 로직
+  // 필터링 로직에서 검색을 담당하는 로직과 관리자만 보기 기능을 분리하여 함수 하나의 하나의 기능을 담당하는 게 좋다고 생각합니다.
+  const filteredUsers = users.filter((user) => {
+    const nameMatches = user.name.includes(keyword);
+    const emailMatches = user.email.includes(keyword);
+    const adminMatches = !showAdminsOnly || user.isAdmin;
+    return (nameMatches || emailMatches) && adminMatches;
+  });
 
   return (
     <div className={styles.container}>
       <h2>과제 5: 코드 리뷰하기</h2>
       <p className={styles.description}>
-        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로 작성해주세요.
+        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로
+        작성해주세요.
       </p>
+      {/* 71번 줄부터 87번 줄, table 태그의 코드를 작은 단위의 컴포넌트로 분리하여 해당 페이지는 로직을 담당하는 컴포넌트로 남겨두고 
+        작은 단위로 분리한 컴포넌트는 UI만을 담당하는 컴포넌트로 레이어를 분리하면 좋을 거 같습니다.
+      */}
+      <Controls
+        setKeyword={setKeyword}
+        setShowAdminsOnly={setShowAdminsOnly}
+        showAdminsOnly={showAdminsOnly}
+      />
 
-      <div className={styles.controls}>
-        <input
-          type="text"
-          placeholder="이름으로 검색..."
-          onChange={e => setFilter(e.target.value)}
-          className={styles.input}
-        />
-        <label>
-          <input
-            type="checkbox"
-            checked={showAdminsOnly}
-            onChange={e => setShowAdminsOnly(e.target.checked)}
-          />
-          관리자만 보기
-        </label>
-      </div>
-
-      {loading ? (
-        <p>로딩 중...</p>
-      ) : (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>이름</th>
-              <th>이메일</th>
-              <th>역할</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.map(u => (
-              <tr key={u.id}>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
-                {/* 역할(Role) 표시 */}
-                <td style={{ color: u.isAdmin ? 'blue' : 'black' }}>
-                  {u.isAdmin ? 'Admin' : 'User'}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      {loading ? <p>로딩 중...</p> : <Table filteredUsers={filteredUsers} />}
     </div>
   );
 };
