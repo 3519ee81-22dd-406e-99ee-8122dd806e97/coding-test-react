@@ -62,3 +62,18 @@
 .table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+/* 검색 결과 없음 */
+.emptyState {
+  text-align: center;
+  color: #ccc;
+}
+
+/* Admin과 User 역할 구분 */
+.roleAdmin {
+  color: blue;
+}
+
+.roleUser {
+  color: black;
+}
