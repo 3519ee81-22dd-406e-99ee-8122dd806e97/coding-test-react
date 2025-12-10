@@ -35,6 +35,8 @@ const BuggyCart: React.FC = () => {
     const itemToUpdate = items.find((item) => item.id === itemId);
     if (itemToUpdate) {
       itemToUpdate.quantity += 1;
+      // useState를 바로 적용시키면 비동기 처럼 작동하기 때문에 바로 적용이 불가능합니다.
+      // 따라서 이전 상태를 넣어주는 방식으로 버그를 해결했습니다.
       setItems((prev) => [...prev]);
     }
   };
