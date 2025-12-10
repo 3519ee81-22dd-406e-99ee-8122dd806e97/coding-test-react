@@ -1,5 +1,6 @@
-import React from 'react';
-import styles from './UserProfile.module.css';
+import React from "react";
+import styles from "./UserProfile.module.css";
+import UserStat from "./UserStat";
 
 // --- 데이터 타입 정의 ---
 interface User {
@@ -42,13 +43,20 @@ interface UserProfileProps {
  * 4. CSS 모듈을 사용하여 스타일을 관리하세요.
  *
  */
+/* 해설: 공통적으로 겹치는 부분만 모듈화하였습니다. 헤더나 사용자 정보, 게시물 그리드의 경우 1번씩만 이용되기 때문에, 따로 분리해주지는 않았습니다. 
+    UserStat의 경우 동일한 코드가 3번 작성 되기 때문에 해당 코드만 UserStat.tsx로 분리해주었습니다. 
+ */
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
       <header className={styles.profileHeader}>
         <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
+          <img
+            src={user.avatarUrl}
+            alt={`${user.name}'s avatar`}
+            className={styles.avatar}
+          />
         </div>
         <div className={styles.userInfoContainer}>
           <h2 className={styles.username}>{user.username}</h2>
@@ -64,25 +72,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
 
       {/* 3. 사용자 통계 */}
       <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
+        <UserStat stats={stats.posts} statName="게시물"></UserStat>
+        <UserStat stats={stats.followers} statName="팔로워"></UserStat>
+        <UserStat stats={stats.following} statName="팔로잉"></UserStat>
       </section>
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
-        {posts.map(post => (
+        {posts.map((post) => (
           <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
+            <img
+              src={post.imageUrl}
+              alt={post.caption}
+              className={styles.postImage}
+            />
           </div>
         ))}
       </main>
