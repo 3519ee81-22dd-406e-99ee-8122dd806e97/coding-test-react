@@ -1,5 +1,7 @@
-import React from 'react';
-import styles from './UserProfile.module.css';
+import React from "react";
+import styles from "./UserProfile.module.css";
+import StateItem from "./StateItem/StateItem";
+import UserProfileHeader from "./UserProfileHeader/UserProfileHeader";
 
 // --- 데이터 타입 정의 ---
 interface User {
@@ -9,7 +11,6 @@ interface User {
   bio: string;
   avatarUrl: string;
 }
-
 interface UserStats {
   posts: number;
   followers: number;
@@ -45,17 +46,7 @@ interface UserProfileProps {
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
-      {/* 1. 프로필 헤더 */}
-      <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
-        </div>
-        <div className={styles.userInfoContainer}>
-          <h2 className={styles.username}>{user.username}</h2>
-          <button className={styles.editProfileButton}>프로필 편집</button>
-        </div>
-      </header>
-
+      <UserProfileHeader user={user} />
       {/* 2. 사용자 정보 */}
       <section className={styles.userInfoSection}>
         <h1 className={styles.name}>{user.name}</h1>
@@ -64,25 +55,26 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
 
       {/* 3. 사용자 통계 */}
       <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
+        <StateItem stats={stats} type="post">
+          게시물
+        </StateItem>
+        <StateItem stats={stats} type="followers">
+          팔로워
+        </StateItem>
+        <StateItem stats={stats} type="following">
+          팔로잉
+        </StateItem>
       </section>
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
-        {posts.map(post => (
+        {posts.map((post) => (
           <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
+            <img
+              src={post.imageUrl}
+              alt={post.caption}
+              className={styles.postImage}
+            />
           </div>
         ))}
       </main>
