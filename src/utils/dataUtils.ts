@@ -156,7 +156,7 @@ export const findUsersByTag = (users: User[], tag: string): User[] => {
 
 // 문제 10: 부서별 사용자 통계 집계
 export const getDepartmentSummary = (users: User[]): DepartmentSummary => {
-  return users.reduce((acc, user) => {
+  const intermediate = users.reduce((acc, user) => {
     const dept = user.department;
 
     if (!acc[dept]) {
@@ -170,5 +170,16 @@ export const getDepartmentSummary = (users: User[]): DepartmentSummary => {
     acc[dept].totalAge += user.age;
 
     return acc;
-  }, {} as Record<string, { userCount: number; totalAge: number }>) as unknown as DepartmentSummary;
+  }, {} as Record<string, { userCount: number; totalAge: number }>);
+
+  const result: DepartmentSummary = {};
+
+  Object.entries(intermediate).forEach(([dept, { userCount, totalAge }]) => {
+    result[dept] = {
+      userCount,
+      averageAge: totalAge / userCount,
+    };
+  });
+
+  return result;
 };
