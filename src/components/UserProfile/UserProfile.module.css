@@ -6,6 +6,7 @@
   color: #262626;
 }
 
+/* 헤더 */
 .profileHeader {
   display: flex;
   align-items: center;
@@ -48,6 +49,7 @@
   cursor: pointer;
 }
 
+/* 사용자 정보 */
 .userInfoSection {
   margin-bottom: 24px;
 }
@@ -62,6 +64,7 @@
   line-height: 1.5;
 }
 
+/* 사용자 통계 */
 .statsSection {
   display: flex;
   justify-content: space-around;
@@ -86,6 +89,7 @@
   color: #8e8e8e;
 }
 
+/* 게시물 그리드 */
 .postsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
