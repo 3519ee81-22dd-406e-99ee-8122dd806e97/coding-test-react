@@ -30,13 +30,13 @@ const initialItems: CartItem[] = [
 const BuggyCart: React.FC = () => {
   const [items, setItems] = useState<CartItem[]>(initialItems);
 
-  // 버그가 있는 Handler
+  // 버그 수정: 불변성을 유지하여 새로운 배열과 객체를 생성
   const handleIncreaseQuantity = (itemId: number) => {
-    const itemToUpdate = items.find(item => item.id === itemId);
-    if (itemToUpdate) {
-      itemToUpdate.quantity += 1;
-      setItems(items);
-    }
+    setItems(items.map(item => 
+      item.id === itemId 
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    ));
   };
 
   const totalPrice = useMemo(() => {
