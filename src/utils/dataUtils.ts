@@ -50,12 +50,13 @@ export const filterActiveUsers = (users: User[]): User[] => {
 
 // 문제 2: ID로 사용자 찾기
 export const findUserById = (users: User[], id: number): User | undefined => {
-  return undefined;
+  return users.find((user) => user.id === id);
 };
 
 // 문제 3: 사용자 이름을 ID 맵으로 변환
 export const createUserMap = (users: User[]): { [id: number]: string } => {
-  return {};
+  const idNameEntries = users.map((user) => [user.id, user.name]);
+  return Object.fromEntries(idNameEntries);
 };
 
 // 문제 4: 키를 기준으로 배열 정렬
