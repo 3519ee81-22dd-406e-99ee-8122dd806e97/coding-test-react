@@ -65,7 +65,25 @@ export const sortArrayByKey = <T>(
   key: keyof T,
   order: "asc" | "desc"
 ): T[] => {
-  return [];
+  const result = [...array];
+
+  result.sort((obj1, obj2) => {
+    const a = obj1[key];
+    const b = obj2[key];
+
+    if (typeof a === "number" && typeof b === "number") {
+      return order === "asc" ? a - b : b - a;
+    }
+
+    const sa = String(a);
+    const sb = String(b);
+
+    const compare = sa.localeCompare(sb);
+
+    return order === "asc" ? compare : -compare;
+  });
+
+  return result;
 };
 
 // 문제 5: 페이지네이션 구현
