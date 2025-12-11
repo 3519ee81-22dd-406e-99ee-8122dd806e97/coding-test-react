@@ -72,6 +72,9 @@ const UserList = () => {
       <div className={styles.controls}>
         <input
           type="text"
+          // 기존에는 placeholder가  이름으로 검색이지만 실제로 이메일도 함께 검색이 가능
+          // UI 텍스트 및 실제 동작이 불일치하면 사용자가 기능을 오해할 수 있음
+          // 이름 또는 이메일로 검색 등으로 변경하는 것이 더 명확함
           placeholder="이름으로 검색..."
           onChange={e => setFilter(e.target.value)}
           className={styles.input}
@@ -88,6 +91,8 @@ const UserList = () => {
 
       {loading ? (
         <p>로딩 중...</p>
+        // 기존에 필터 결과가 0개일 때 테이블 헤더만 보이고 데이터가 없는지, 로딩 중인지 구분이 어려움
+        // 검색 결과 없음 <- 으로 빈 상태를 명시적으로 보여주는게 명확함
       ) : (
         <table className={styles.table}>
           <thead>
