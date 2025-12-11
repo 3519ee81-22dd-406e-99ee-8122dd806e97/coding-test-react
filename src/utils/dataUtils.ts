@@ -1,95 +1,127 @@
 // --- 데이터 타입 정의 ---
 export interface User {
-  id: number;
-  name: string;
-  age: number;
-  isActive: boolean;
-  department: string;
-  tags?: string[];
+    id: number;
+    name: string;
+    age: number;
+    isActive: boolean;
+    department: string;
+    tags?: string[];
 }
 
 export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  stock: number;
+    id: number;
+    name: string;
+    price: number;
+    category: string;
+    stock: number;
 }
 
 export interface Order {
-  id: number;
-  userId: number;
-  products: { productId: number; quantity: number }[];
-  orderDate: string;
+    id: number;
+    userId: number;
+    products: { productId: number; quantity: number }[];
+    orderDate: string;
 }
 
 export interface CategorySummary {
-  [category: string]: {
-    totalPrice: number;
-  };
+    [category: string]: {
+        totalPrice: number;
+    };
 }
 
 export interface DepartmentSummary {
-  [department: string]: {
-    userCount: number;
-    averageAge: number;
-  };
+    [department: string]: {
+        userCount: number;
+        averageAge: number;
+    };
 }
 
 export interface PaginatedResult<T> {
-  items: T[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
+    items: T[];
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
 }
-
 
 // 문제 1: 활성 사용자 필터링
 export const filterActiveUsers = (users: User[]): User[] => {
-  return [];
+    if (users) {
+        return users.filter((user) => user.isActive);
+    }
+    return [];
 };
 
 // 문제 2: ID로 사용자 찾기
 export const findUserById = (users: User[], id: number): User | undefined => {
-  return undefined;
+    if (users) {
+        return users.find((user) => user.id === id);
+    }
+    return undefined;
 };
 
 // 문제 3: 사용자 이름을 ID 맵으로 변환
 export const createUserMap = (users: User[]): { [id: number]: string } => {
-  return {};
+    return {};
 };
 
 // 문제 4: 키를 기준으로 배열 정렬
-export const sortArrayByKey = <T>(array: T[], key: keyof T, order: 'asc' | 'desc'): T[] => {
-  return [];
+export const sortArrayByKey = <T>(
+    array: T[],
+    key: keyof T,
+    order: "asc" | "desc"
+): T[] => {
+    if (array) {
+        if (order === "asc") {
+            return [...array].sort((a, b) => a.key - b.key);
+        }
+    }
+    return [];
 };
 
 // 문제 5: 페이지네이션 구현
-export const paginate = <T>(array: T[], page: number, pageSize: number): PaginatedResult<T> => {
-  return { items: [], totalItems: 0, totalPages: 0, currentPage: page };
+export const paginate = <T>(
+    array: T[],
+    page: number,
+    pageSize: number
+): PaginatedResult<T> => {
+    return { items: [], totalItems: 0, totalPages: 0, currentPage: page };
 };
 
 // 문제 6: 계산된 속성 추가 (age 가 20 이상을 adult 로 간주합니다)
-export const addIsAdultProperty = (users: User[]): (User & { isAdult: boolean })[] => {
-  return [];
+export const addIsAdultProperty = (
+    users: User[]
+): (User & { isAdult: boolean })[] => {
+    return [];
 };
 
 // 문제 7: 카테고리별 상품 총액 계산
 export const getCategoryTotals = (products: Product[]): CategorySummary => {
-  return {};
+    return {};
 };
 
 // 문제 8: 두 사용자 배열 병합 및 중복 제거 (중복이 있는 경우 users2 내의 사용자를 사용합니다)
-export const mergeAndDeduplicateUsers = (users1: User[], users2: User[]): User[] => {
-  return [];
+export const mergeAndDeduplicateUsers = (
+    users1: User[],
+    users2: User[]
+): User[] => {
+    return [];
 };
 
 // 문제 9: 특정 태그를 가진 사용자 찾기
 export const findUsersByTag = (users: User[], tag: string): User[] => {
-  return [];
+    if (users) {
+        return users.find((user) => user.tags?.map((m) => m === tag));
+    }
+    return [];
 };
 
 // 문제 10: 부서별 사용자 통계 집계
 export const getDepartmentSummary = (users: User[]): DepartmentSummary => {
-  return {};
+    let object = {}
+    const HR = users.filter((user)=>user.department === "HR");
+    const Engineering = users.filter((user)=>user.department === "Engineering");
+    const Marketing = users.filter((user)=>user.department === "Marketing");
+
+    
+    return {};
 };
