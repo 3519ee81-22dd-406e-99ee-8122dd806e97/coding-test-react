@@ -92,7 +92,19 @@ export const paginate = <T>(
   page: number,
   pageSize: number
 ): PaginatedResult<T> => {
-  return { items: [], totalItems: 0, totalPages: 0, currentPage: page };
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
+
+  const items = array.slice(start, end);
+  const totalItems = items.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  return {
+    items: items,
+    totalItems: totalItems,
+    totalPages: totalPages,
+    currentPage: page,
+  };
 };
 
 // 문제 6: 계산된 속성 추가 (age 가 20 이상을 adult 로 간주합니다)
