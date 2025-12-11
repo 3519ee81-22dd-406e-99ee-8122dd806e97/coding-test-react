@@ -7,20 +7,6 @@
   color: #262626;
 }
 
-.userInfoSection {
-  margin-bottom: 24px;
-}
-
-.name {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.bio {
-  font-size: 16px;
-  line-height: 1.5;
-}
-
 .statsSection {
   display: flex;
   justify-content: space-around;

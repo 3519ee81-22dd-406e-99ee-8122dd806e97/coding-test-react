@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./UserProfile.module.css";
 import Header from "./UserProfile/Header";
+import UserInfo from "./UserProfile/UserInfo";
 
 // --- 데이터 타입 정의 ---
 export interface User {
@@ -49,10 +50,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
       <Header user={user} />
 
       {/* 2. 사용자 정보 */}
-      <section className={styles.userInfoSection}>
-        <h1 className={styles.name}>{user.name}</h1>
-        <p className={styles.bio}>{user.bio}</p>
-      </section>
+      <UserInfo user={user} />
 
       {/* 3. 사용자 통계 */}
       <section className={styles.statsSection}>
