@@ -41,12 +41,22 @@ const fetchUsers = (): Promise<UserData[]> => {
 };
 
 const UserList = () => {
+  // [코드 리뷰 1] 타입 안정성 문제
+  // 문제: any 타입을 사용하여 타입 안정성이 저하됩니다.
+  // 이유: any 타입은 TypeScript의 타입 체크를 우회하여 런타임 에러 가능성을 높입니다.
+  // 개선: UserData[] 타입을 명시하여 타입 안정성을 확보해야 합니다.
+  // 예: const [users, setUsers] = useState<UserData[]>([]);
   const [users, setUsers] = useState<any[]>([]); // state 1
   const [filter, setFilter] = useState(''); // state 2
   const [loading, setLoading] = useState(true); // state 3
   const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
 
   // 데이터 로딩
+  // [코드 리뷰 2] 에러 처리 부재
+  // 문제: fetchUsers에서 에러가 발생할 경우 처리하지 않아 앱이 불안정할 수 있습니다.
+  // 이유: 네트워크 오류나 API 실패 시 사용자에게 피드백이 없고, loading 상태가 영구적으로 true로 남을 수 있습니다.
+  // 개선: try-catch 또는 .catch()를 사용하여 에러를 처리하고, 에러 상태를 추가해야 합니다.
+  // 예: fetchUsers().then(...).catch(error => { setError(error); setLoading(false); });
   useEffect(() => {
     fetchUsers().then(data => {
       setUsers(data);
@@ -54,13 +64,18 @@ const UserList = () => {
     });
   }, []);
 
-    // 필터링 로직
+  // [코드 리뷰 3] 성능 최적화 부재
+  // 문제: 필터링 로직이 매 렌더링마다 실행되어 불필요한 연산이 발생합니다.
+  // 이유: users나 filter, showAdminsOnly가 변경되지 않아도 컴포넌트가 리렌더링될 때마다 필터링이 재실행됩니다.
+  // 개선: useMemo를 사용하여 users, filter, showAdminsOnly가 변경될 때만 필터링을 수행하도록 최적화해야 합니다.
+  // 예: const filteredUsers = useMemo(() => users.filter(...), [users, filter, showAdminsOnly]);
+  // 필터링 로직
   const filteredUsers = users.filter(user => {
-      const nameMatches = user.name.includes(filter);
-      const emailMatches = user.email.includes(filter);
-      const adminMatches = !showAdminsOnly || user.isAdmin;
-      return (nameMatches || emailMatches) && adminMatches;
-    });
+    const nameMatches = user.name.includes(filter);
+    const emailMatches = user.email.includes(filter);
+    const adminMatches = !showAdminsOnly || user.isAdmin;
+    return (nameMatches || emailMatches) && adminMatches;
+  });
 
   return (
     <div className={styles.container}>
@@ -70,9 +85,14 @@ const UserList = () => {
       </p>
 
       <div className={styles.controls}>
+        {/* [코드 리뷰 4] 제어 컴포넌트 패턴 미준수 */}
+        {/* 문제: input의 value 속성이 없어 비제어 컴포넌트로 동작합니다. */}
+        {/* 이유: React의 제어 컴포넌트 패턴을 따르지 않으면 상태와 UI가 불일치할 수 있습니다. */}
+        {/* 개선: value={filter} 속성을 추가하여 제어 컴포넌트로 만들어야 합니다. */}
         <input
           type="text"
           placeholder="이름으로 검색..."
+          value={filter}
           onChange={e => setFilter(e.target.value)}
           className={styles.input}
         />
@@ -98,13 +118,18 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map(u => (
-              <tr key={u.id}>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
+            {/* [코드 리뷰 5] 변수명 가독성 및 인라인 스타일 사용 */}
+            {/* 문제 1: 변수명 'u'가 너무 짧아 가독성이 떨어집니다. */}
+            {/* 문제 2: 인라인 스타일을 사용하여 CSS 모듈의 일관성이 깨집니다. */}
+            {/* 이유: 짧은 변수명은 코드 이해를 어렵게 하고, 인라인 스타일은 유지보수와 재사용성을 저하시킵니다. */}
+            {/* 개선: 변수명을 'user'로 변경하고, CSS 모듈에 스타일을 정의하여 className으로 적용해야 합니다. */}
+            {filteredUsers.map(user => (
+              <tr key={user.id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
                 {/* 역할(Role) 표시 */}
-                <td style={{ color: u.isAdmin ? 'blue' : 'black' }}>
-                  {u.isAdmin ? 'Admin' : 'User'}
+                <td className={user.isAdmin ? styles.adminRole : styles.userRole}>
+                  {user.isAdmin ? 'Admin' : 'User'}
                 </td>
               </tr>
             ))}

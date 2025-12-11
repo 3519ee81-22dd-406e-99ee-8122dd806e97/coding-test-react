@@ -62,3 +62,12 @@
 .table tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+.adminRole {
+  color: blue;
+  font-weight: 600;
+}
+
+.userRole {
+  color: black;
+}
