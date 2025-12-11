@@ -3,11 +3,11 @@ import styles from './UserProfile.module.css';
 
 // --- 데이터 타입 정의 ---
 interface User {
-  id: number;
+  id?: number;
   name: string;
-  username: string;
-  bio: string;
-  avatarUrl: string;
+  username?: string;
+  bio?: string;
+  avatarUrl?: string;
 }
 
 interface UserStats {
@@ -42,11 +42,70 @@ interface UserProfileProps {
  * 4. CSS 모듈을 사용하여 스타일을 관리하세요.
  *
  */
+
+const UserProfileHeader: React.FC<User> = ({ avatarUrl, name, username }) => {
+  return (
+    <>
+      <header className={styles.profileHeader}>
+        <div className={styles.avatarContainer}>
+          <img src={avatarUrl} alt={`${name}'s avatar`} className={styles.avatar} />
+        </div>
+        <div className={styles.userInfoContainer}>
+          <h2 className={styles.username}>{username}</h2>
+          <button className={styles.editProfileButton}>프로필 편집</button>
+        </div>
+      </header>
+    </>
+  )
+}
+
+const UserInfo: React.FC<User> = ({ name, bio }) => {
+  return (
+    <>
+      <section className={styles.userInfoSection}>
+        <h1 className={styles.name}>{name}</h1>
+        <p className={styles.bio}>{bio}</p>
+      </section>
+    </>
+  )
+}
+
+const UserSummary: React.FC<UserStats> = ({ posts, followers, following }) => {
+  const statList = [[posts, "게시글"], [followers, "팔로워"], [following, "팔로잉"]];
+
+  return (
+    <>
+      <section className={styles.statsSection}>
+        {statList.map((stat) => {
+          return (
+            <>
+              <div className={styles.statItem}>
+                <span className={styles.statValue}>{stat[0]}</span>
+                <span className={styles.statLabel}>{stat[1]}</span>
+              </div>
+            </>
+          )
+        })}
+      </section>
+    </>
+  )
+}
+
+const UserPost: React.FC<Post> = ({ id, imageUrl, caption }) => {
+  return (
+    <>
+      <div key={id} className={styles.postItem}>
+        <img src={imageUrl} alt={caption} className={styles.postImage} />
+      </div>
+    </>
+  )
+}
+
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
-      <header className={styles.profileHeader}>
+      {/* <header className={styles.profileHeader}>
         <div className={styles.avatarContainer}>
           <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
         </div>
@@ -54,16 +113,18 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
           <h2 className={styles.username}>{user.username}</h2>
           <button className={styles.editProfileButton}>프로필 편집</button>
         </div>
-      </header>
+      </header> */}
+      <UserProfileHeader name={user.name} username={user.username} avatarUrl={user.avatarUrl} />
 
       {/* 2. 사용자 정보 */}
-      <section className={styles.userInfoSection}>
+      {/* <section className={styles.userInfoSection}>
         <h1 className={styles.name}>{user.name}</h1>
         <p className={styles.bio}>{user.bio}</p>
-      </section>
+      </section> */}
+      <UserInfo name={user.name} bio={user.bio} />
 
       {/* 3. 사용자 통계 */}
-      <section className={styles.statsSection}>
+      {/* <section className={styles.statsSection}>
         <div className={styles.statItem}>
           <span className={styles.statValue}>{stats.posts}</span>
           <span className={styles.statLabel}>게시물</span>
@@ -76,14 +137,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
           <span className={styles.statValue}>{stats.following}</span>
           <span className={styles.statLabel}>팔로잉</span>
         </div>
-      </section>
+      </section> */}
+      <UserSummary posts={stats.posts} followers={stats.followers} following={stats.following} />
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
         {posts.map(post => (
-          <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-          </div>
+          <UserPost id={post.id} imageUrl={post.imageUrl} caption={post.caption} />
         ))}
       </main>
     </div>
