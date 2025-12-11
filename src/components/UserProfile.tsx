@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./UserProfile.module.css";
 import Header from "./UserProfile/Header";
 import UserInfo from "./UserProfile/UserInfo";
+import Stats from "./UserProfile/Stats";
 
 // --- 데이터 타입 정의 ---
 export interface User {
@@ -12,7 +13,7 @@ export interface User {
   avatarUrl: string;
 }
 
-interface UserStats {
+export interface UserStats {
   posts: number;
   followers: number;
   following: number;
@@ -53,20 +54,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
       <UserInfo user={user} />
 
       {/* 3. 사용자 통계 */}
-      <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
-      </section>
+      <Stats stats={stats} />
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
