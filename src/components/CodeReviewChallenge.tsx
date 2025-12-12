@@ -41,12 +41,15 @@ const fetchUsers = (): Promise<UserData[]> => {
 };
 
 const UserList = () => {
-  const [users, setUsers] = useState<any[]>([]); // state 1
+  const [users, setUsers] = useState<any[]>([]); // state 1 
+  // <UserData[]>로 변경하여 타입 안정성을 확보
+
   const [filter, setFilter] = useState(''); // state 2
   const [loading, setLoading] = useState(true); // state 3
   const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
 
   // 데이터 로딩
+  // error를 전담하는 state를 만들고, .catch블록을 추가하여, fetch 실패 시 에러 상태 관리 및 분기 렌더링
   useEffect(() => {
     fetchUsers().then(data => {
       setUsers(data);
@@ -54,7 +57,8 @@ const UserList = () => {
     });
   }, []);
 
-    // 필터링 로직
+    // 필터링 로직 
+    // 매 렌더링마다 필터링 연산이 재실행 되기 때문에, useMemo를 통한 연산 결과 메모이제이션으로 성능 저하 방지
   const filteredUsers = users.filter(user => {
       const nameMatches = user.name.includes(filter);
       const emailMatches = user.email.includes(filter);
@@ -76,6 +80,7 @@ const UserList = () => {
           onChange={e => setFilter(e.target.value)}
           className={styles.input}
         />
+        {/*onChange 이벤트 발생 시, debounce 적용하여 타이핑이 발생 할 때마다의 불필요한 렌더링 방지*/}
         <label>
           <input
             type="checkbox"
@@ -103,6 +108,7 @@ const UserList = () => {
                 <td>{u.name}</td>
                 <td>{u.email}</td>
                 {/* 역할(Role) 표시 */}
+                {/*인라인 스타일 사용 자제 CSS 일관성 저하 및 성능 저하 방지*/}
                 <td style={{ color: u.isAdmin ? 'blue' : 'black' }}>
                   {u.isAdmin ? 'Admin' : 'User'}
                 </td>
