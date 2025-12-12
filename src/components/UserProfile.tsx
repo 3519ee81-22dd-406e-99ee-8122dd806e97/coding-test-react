@@ -42,13 +42,33 @@ interface UserProfileProps {
  * 4. CSS 모듈을 사용하여 스타일을 관리하세요.
  *
  */
+
+const UserStatisticsComponent = ({
+  value,
+  label,
+}: {
+  value: number;
+  label: string;
+}) => {
+  return (
+    <div className={styles.statItem}>
+      <span className={styles.statValue}>{value}</span>
+      <span className={styles.statLabel}>{label}</span>
+    </div>
+  );
+};
+
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
       <header className={styles.profileHeader}>
         <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
+          <img
+            src={user.avatarUrl}
+            alt={`${user.name}'s avatar`}
+            className={styles.avatar}
+          />
         </div>
         <div className={styles.userInfoContainer}>
           <h2 className={styles.username}>{user.username}</h2>
@@ -64,25 +84,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
 
       {/* 3. 사용자 통계 */}
       <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
+        <UserStatisticsComponent value={stats.posts} label='게시물' />
+        <UserStatisticsComponent value={stats.followers} label='팔로워' />
+        <UserStatisticsComponent value={stats.following} label='팔로잉' />
       </section>
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
-        {posts.map(post => (
+        {posts.map((post) => (
           <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
+            <img
+              src={post.imageUrl}
+              alt={post.caption}
+              className={styles.postImage}
+            />
           </div>
         ))}
       </main>
