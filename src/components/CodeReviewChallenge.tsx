@@ -42,6 +42,9 @@ const fetchUsers = (): Promise<UserData[]> => {
 
 const UserList = () => {
   const [users, setUsers] = useState<any[]>([]); // state 1
+  // [1번] useState<any[]> 사용은 타입 안정성을 깨뜨립니다.
+  // UserData[] 형태로 명확히 지정하여, 오류를 사전에 방지할 수 있습니다.
+
   const [filter, setFilter] = useState(''); // state 2
   const [loading, setLoading] = useState(true); // state 3
   const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
@@ -53,6 +56,9 @@ const UserList = () => {
       setLoading(false);
     });
   }, []);
+  // [2번] 에러 처리가 없습니다.
+  // 비동기 호출 중 컴포넌트가 언마운트 setState 호출로 경고 발생 가능성이 있습니다.
+  // isMounted 플래그 사용을 권장드립니다.
 
     // 필터링 로직
   const filteredUsers = users.filter(user => {
@@ -61,6 +67,9 @@ const UserList = () => {
       const adminMatches = !showAdminsOnly || user.isAdmin;
       return (nameMatches || emailMatches) && adminMatches;
     });
+    // [3번] filter 함수 내부는 렌더링마다 실행되므로 비용이 발생합니다.
+    // 데이터가 많아질 시 성능 저하 가능성이 있습니다.
+    // useMemo를 이용하여 메모이제이션하는 것을 추천합니다.
 
   return (
     <div className={styles.container}>
@@ -76,6 +85,12 @@ const UserList = () => {
           onChange={e => setFilter(e.target.value)}
           className={styles.input}
         />
+        {/*
+          [4번] onChange에서 debounce/throttle 없이 즉시 state가 업데이트됩니다.
+          이로 인해 사용자가 빠르게 입력을 할 시 불필요한 렌더링이 반복됩니다.
+          debounce 함수를 적용하는 것을 권장드립니다.
+        */}
+
         <label>
           <input
             type="checkbox"
@@ -108,6 +123,10 @@ const UserList = () => {
                 </td>
               </tr>
             ))}
+            {/*
+              [5번] 필터 결과가 0개일 때 사용자에게 결과 없음 표시 같은 후처리가 없습니다.
+              filterdUsers.length === 0일 때 '결과 없음' 표시하는 것을 추천드립니다.
+            */}
           </tbody>
         </table>
       )}
