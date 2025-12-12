@@ -43,53 +43,88 @@ export interface PaginatedResult<T> {
   currentPage: number;
 }
 
-
 // 문제 1: 활성 사용자 필터링
 export const filterActiveUsers = (users: User[]): User[] => {
-  return [];
+  const filterUser = users.map((user) => user.isActive);
+
+  return filterUser;
 };
 
 // 문제 2: ID로 사용자 찾기
 export const findUserById = (users: User[], id: number): User | undefined => {
-  return undefined;
+  const findUser = users.map((user) => {
+    if (user.id === id) return user;
+  });
+
+  return findUser;
 };
 
 // 문제 3: 사용자 이름을 ID 맵으로 변환
 export const createUserMap = (users: User[]): { [id: number]: string } => {
-  return {};
+  let userObj = {};
+
+  users.map((user) => {
+    userObj[user.name] = user.id;
+  });
+
+  return userObj;
 };
 
-// 문제 4: 키를 기준으로 배열 정렬
-export const sortArrayByKey = <T>(array: T[], key: keyof T, order: 'asc' | 'desc'): T[] => {
-  return [];
-};
+// // 문제 4: 키를 기준으로 배열 정렬
+// export const sortArrayByKey = <T>(
+//   array: T[],
+//   key: keyof T,
+//   order: 'asc' | 'desc'
+// ): T[] => {
+//   return [];
+// };
 
-// 문제 5: 페이지네이션 구현
-export const paginate = <T>(array: T[], page: number, pageSize: number): PaginatedResult<T> => {
-  return { items: [], totalItems: 0, totalPages: 0, currentPage: page };
-};
+// // 문제 5: 페이지네이션 구현
+// export const paginate = <T>(
+//   array: T[],
+//   page: number,
+//   pageSize: number
+// ): PaginatedResult<T> => {
+//   return { items: [], totalItems: 0, totalPages: 0, currentPage: page };
+// };
 
 // 문제 6: 계산된 속성 추가 (age 가 20 이상을 adult 로 간주합니다)
-export const addIsAdultProperty = (users: User[]): (User & { isAdult: boolean })[] => {
-  return [];
+export const addIsAdultProperty = (
+  users: User[]
+): (User & { isAdult: boolean })[] => {
+  const addIsAdult = users.map((user) => {
+    user.age >= 20 ? (users.isAdult = true) : (users.isAdult = false);
+  });
+
+  return addIsAdult;
 };
 
-// 문제 7: 카테고리별 상품 총액 계산
+// // 문제 7: 카테고리별 상품 총액 계산
 export const getCategoryTotals = (products: Product[]): CategorySummary => {
-  return {};
+  const categoryObj = {};
+
+  products.map((product) => {
+    if (!categoryObj[product.catagory]) categoryObj[product.category] = 0;
+    categoryObj[product.catagory] += product.price;
+  });
+
+  return categoryObj;
 };
 
-// 문제 8: 두 사용자 배열 병합 및 중복 제거 (중복이 있는 경우 users2 내의 사용자를 사용합니다)
-export const mergeAndDeduplicateUsers = (users1: User[], users2: User[]): User[] => {
-  return [];
-};
+// // 문제 8: 두 사용자 배열 병합 및 중복 제거 (중복이 있는 경우 users2 내의 사용자를 사용합니다)
+// export const mergeAndDeduplicateUsers = (
+//   users1: User[],
+//   users2: User[]
+// ): User[] => {
+//   return [];
+// };
 
-// 문제 9: 특정 태그를 가진 사용자 찾기
-export const findUsersByTag = (users: User[], tag: string): User[] => {
-  return [];
-};
+// // 문제 9: 특정 태그를 가진 사용자 찾기
+// export const findUsersByTag = (users: User[], tag: string): User[] => {
+//   return [];
+// };
 
-// 문제 10: 부서별 사용자 통계 집계
-export const getDepartmentSummary = (users: User[]): DepartmentSummary => {
-  return {};
-};
+// // 문제 10: 부서별 사용자 통계 집계
+// export const getDepartmentSummary = (users: User[]): DepartmentSummary => {
+//   return {};
+// };
