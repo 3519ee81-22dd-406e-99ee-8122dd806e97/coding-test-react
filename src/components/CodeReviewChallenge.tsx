@@ -26,7 +26,7 @@ type UserData = {
 
 // 가짜 API 호출 함수
 const fetchUsers = (): Promise<UserData[]> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
         { id: 1, name: '김철수', email: 'chulsoo@example.com', isAdmin: false },
@@ -41,46 +41,58 @@ const fetchUsers = (): Promise<UserData[]> => {
 };
 
 const UserList = () => {
-  const [users, setUsers] = useState<any[]>([]); // state 1
-  const [filter, setFilter] = useState(''); // state 2
-  const [loading, setLoading] = useState(true); // state 3
-  const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
+  // 리뷰 1: any로 타입을 명시하게 되면 타입스크립트의 이점이 없어지므로
+  //        위에서 명시한 UserData 타입으로 선언하는 것이 좋음
+  // const [users, setUsers] = useState<any[]>([]); // state 1
+  const [users, setUsers] = useState<UserData[]>([]); // state 1
+
+  // 리뷰 3: 각 state에도 타입을 명시하여 타입스크립트의 이점을 살리도록
+  //        string, boolean, Boolean 제네릭 형태로 선언
+  // const [filter, setFilter] = useState(''); // state 2
+  // const [loading, setLoading] = useState(true); // state 3
+  // const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
+  const [filter, setFilter] = useState<string>(''); // state 2
+  const [loading, setLoading] = useState<boolean>(true); // state 3
+  const [showAdminsOnly, setShowAdminsOnly] = useState<boolean>(false); // state 4
 
   // 데이터 로딩
   useEffect(() => {
-    fetchUsers().then(data => {
+    fetchUsers().then((data) => {
       setUsers(data);
       setLoading(false);
     });
   }, []);
 
-    // 필터링 로직
-  const filteredUsers = users.filter(user => {
-      const nameMatches = user.name.includes(filter);
-      const emailMatches = user.email.includes(filter);
-      const adminMatches = !showAdminsOnly || user.isAdmin;
-      return (nameMatches || emailMatches) && adminMatches;
-    });
+  // 필터링 로직
+  // 리뷰 2: 현재는 이름 검색 타이핑에 따라서 결과가 바로바로 바뀌는데
+  //        디바운스를 걸어 성능에 무리가 가지 않게 하는 것이 좋음
+  const filteredUsers = users.filter((user) => {
+    const nameMatches = user.name.includes(filter);
+    const emailMatches = user.email.includes(filter);
+    const adminMatches = !showAdminsOnly || user.isAdmin;
+    return (nameMatches || emailMatches) && adminMatches;
+  });
 
   return (
     <div className={styles.container}>
       <h2>과제 5: 코드 리뷰하기</h2>
       <p className={styles.description}>
-        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로 작성해주세요.
+        이 파일(`CodeReviewChallenge.tsx`)의 코드에 대한 리뷰를 주석으로
+        작성해주세요.
       </p>
 
       <div className={styles.controls}>
         <input
-          type="text"
-          placeholder="이름으로 검색..."
-          onChange={e => setFilter(e.target.value)}
+          type='text'
+          placeholder='이름으로 검색...'
+          onChange={(e) => setFilter(e.target.value)}
           className={styles.input}
         />
         <label>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={showAdminsOnly}
-            onChange={e => setShowAdminsOnly(e.target.checked)}
+            onChange={(e) => setShowAdminsOnly(e.target.checked)}
           />
           관리자만 보기
         </label>
@@ -98,7 +110,7 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map(u => (
+            {filteredUsers.map((u) => (
               <tr key={u.id}>
                 <td>{u.name}</td>
                 <td>{u.email}</td>
