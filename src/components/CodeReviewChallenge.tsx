@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './CodeReviewChallenge.module.css';
 
+//사용되지 않는 React가 import되어 있습니다 단순 개발 서버 실행시 문제가 되지 않지만 vite프로젝트에서 build실행시 에러가 발생합니다. 
+
 /**
  * ## 과제 5: 코드 리뷰
  *
@@ -45,6 +47,7 @@ const UserList = () => {
   const [filter, setFilter] = useState(''); // state 2
   const [loading, setLoading] = useState(true); // state 3
   const [showAdminsOnly, setShowAdminsOnly] = useState(false); // state 4
+  // any타입을 사용, 타입 비선언으로 개발 과정에서의 에러는 줄어들 수 있지만 타입 안정성은 다소 떨어지게 되며 추후 undefined같은 에러의 원인이 됩니다. 
 
   // 데이터 로딩
   useEffect(() => {
@@ -53,12 +56,13 @@ const UserList = () => {
       setLoading(false);
     });
   }, []);
+  // 로딩 처리 로직은 존재하지만 실패 로직이 존재하지 않습니다 API호출 실패시에 대한 처리가 필요해 보입니다 
 
     // 필터링 로직
   const filteredUsers = users.filter(user => {
       const nameMatches = user.name.includes(filter);
       const emailMatches = user.email.includes(filter);
-      const adminMatches = !showAdminsOnly || user.isAdmin;
+      const adminMatches = !showAdminsOnly || user.isAdmin; //유저가 어드민인 경우 의도하지 않은 동작이 발생할 거 같습니다 
       return (nameMatches || emailMatches) && adminMatches;
     });
 
