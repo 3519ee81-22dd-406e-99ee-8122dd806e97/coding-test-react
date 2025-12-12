@@ -3,6 +3,7 @@ import styles from './UserProfile.module.css';
 import UserProfileBox from './UserProfileBox';
 import UserInfoCard from './UserInfoCard';
 import UserStatusCard from './UserStatusCard';
+import UserPosts from './UserPosts';
 
 // --- 데이터 타입 정의 ---
 export interface User {
@@ -19,7 +20,7 @@ export interface UserStats {
   following: number;
 }
 
-interface Post {
+export interface Post {
   id: number;
   imageUrl: string;
   caption: string;
@@ -66,13 +67,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
       />
 
       {/* 4. 게시물 그리드 */}
-      <main className={styles.postsGrid}>
-        {posts.map(post => (
-          <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-          </div>
-        ))}
-      </main>
+      <UserPosts
+      posts={posts}
+      />
     </div>
   );
 };
