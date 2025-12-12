@@ -1,8 +1,11 @@
 import React from 'react';
 import styles from './UserProfile.module.css';
+import UserProfileBox from './UserProfileBox';
+import UserInfoCard from './UserInfoCard';
+import UserStatusCard from './UserStatusCard';
 
 // --- 데이터 타입 정의 ---
-interface User {
+export interface User {
   id: number;
   name: string;
   username: string;
@@ -10,7 +13,7 @@ interface User {
   avatarUrl: string;
 }
 
-interface UserStats {
+export interface UserStats {
   posts: number;
   followers: number;
   following: number;
@@ -42,41 +45,25 @@ interface UserProfileProps {
  * 4. CSS 모듈을 사용하여 스타일을 관리하세요.
  *
  */
+
+
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
-      <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
-        </div>
-        <div className={styles.userInfoContainer}>
-          <h2 className={styles.username}>{user.username}</h2>
-          <button className={styles.editProfileButton}>프로필 편집</button>
-        </div>
-      </header>
+      <UserProfileBox
+      user={user}
+      />
 
       {/* 2. 사용자 정보 */}
-      <section className={styles.userInfoSection}>
-        <h1 className={styles.name}>{user.name}</h1>
-        <p className={styles.bio}>{user.bio}</p>
-      </section>
+      <UserInfoCard
+      user={user}
+      />
 
       {/* 3. 사용자 통계 */}
-      <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
-      </section>
+      <UserStatusCard
+      stats={stats}
+      />
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
