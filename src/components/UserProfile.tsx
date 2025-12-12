@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './UserProfile.module.css';
+import React from "react";
+import styles from "./UserProfile.module.css";
 
 // --- 데이터 타입 정의 ---
 interface User {
@@ -42,50 +42,115 @@ interface UserProfileProps {
  * 4. CSS 모듈을 사용하여 스타일을 관리하세요.
  *
  */
+
+// 1. 프로필 헤더
+interface ProfileHeaderProps {
+  name: string;
+  username: string;
+  avatarUrl: string;
+}
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+  name,
+  username,
+  avatarUrl,
+}) => {
+  return (
+    <header className={styles.profileHeader}>
+      <div className={styles.avatarContainer}>
+        <img
+          src={avatarUrl}
+          alt={`${name}'s avatar`}
+          className={styles.avatar}
+        />
+      </div>
+      <div className={styles.userInfoContainer}>
+        <h2 className={styles.username}>{username}</h2>
+        <button className={styles.editProfileButton}>프로필 편집</button>
+      </div>
+    </header>
+  );
+};
+
+// 2. 사용자 정보
+interface ProfileBioProps {
+  name: string;
+  bio: string;
+}
+const ProfileBio: React.FC<ProfileBioProps> = ({ name, bio }) => {
+  return (
+    <section className={styles.userInfoSection}>
+      <h1 className={styles.name}>{name}</h1>
+      <p className={styles.bio}>{bio}</p>
+    </section>
+  );
+};
+
+// 3. 사용자 통계
+interface ProfileStatsProps {
+  stats: UserStats;
+}
+const ProfileStats: React.FC<ProfileStatsProps> = ({ stats }) => {
+  return (
+    <section className={styles.statsSection}>
+      <div className={styles.statItem}>
+        <span className={styles.statValue}>{stats.posts}</span>
+        <span className={styles.statLabel}>게시물</span>
+      </div>
+      <div className={styles.statItem}>
+        <span className={styles.statValue}>{stats.followers}</span>
+        <span className={styles.statLabel}>팔로워</span>
+      </div>
+      <div className={styles.statItem}>
+        <span className={styles.statValue}>{stats.following}</span>
+        <span className={styles.statLabel}>팔로잉</span>
+      </div>
+    </section>
+  );
+};
+
+//  4. 게시물 그리드
+interface PostItemsProps {
+  imageUrl: string;
+  caption: string;
+}
+const PostItems: React.FC<PostItemsProps> = ({ imageUrl, caption }) => {
+  return (
+    <div className={styles.postItem}>
+      <img src={imageUrl} alt={caption} className={styles.postImage} />
+    </div>
+  );
+};
+
+interface PostGridProps {
+  posts: Post[];
+}
+
+const PostGrid: React.FC<PostGridProps> = ({ posts }) => {
+  return (
+    <main className={styles.postsGrid}>
+      {posts.map((post) => (
+        <PostItems
+          key={post.id}
+          imageUrl={post.imageUrl}
+          caption={post.caption}
+        />
+      ))}
+    </main>
+  );
+};
+
+// 메인 컴포넌트
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
-      {/* 1. 프로필 헤더 */}
-      <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
-        </div>
-        <div className={styles.userInfoContainer}>
-          <h2 className={styles.username}>{user.username}</h2>
-          <button className={styles.editProfileButton}>프로필 편집</button>
-        </div>
-      </header>
-
-      {/* 2. 사용자 정보 */}
-      <section className={styles.userInfoSection}>
-        <h1 className={styles.name}>{user.name}</h1>
-        <p className={styles.bio}>{user.bio}</p>
-      </section>
-
-      {/* 3. 사용자 통계 */}
-      <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
-      </section>
-
-      {/* 4. 게시물 그리드 */}
-      <main className={styles.postsGrid}>
-        {posts.map(post => (
-          <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-          </div>
-        ))}
-      </main>
+      <ProfileHeader
+        name={user.name}
+        username={user.username}
+        avatarUrl={user.avatarUrl}
+      />
+      <ProfileBio name={user.name} bio={user.bio} />
+      <ProfileStats stats={stats} />
+      <PostGrid posts={posts} />
     </div>
   );
 };
