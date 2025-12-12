@@ -51,7 +51,7 @@ export const filterActiveUsers = (users: User[]): User[] => {
 
 // 문제 2: ID로 사용자 찾기
 export const findUserById = (users: User[], id: number): User | undefined => {
-  return undefined;
+  return users;
 };
 
 // 문제 3: 사용자 이름을 ID 맵으로 변환
