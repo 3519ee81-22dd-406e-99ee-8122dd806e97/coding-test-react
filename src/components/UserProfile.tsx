@@ -1,32 +1,10 @@
-import React from 'react';
-import styles from './UserProfile.module.css';
-
-// --- 데이터 타입 정의 ---
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  bio: string;
-  avatarUrl: string;
-}
-
-interface UserStats {
-  posts: number;
-  followers: number;
-  following: number;
-}
-
-interface Post {
-  id: number;
-  imageUrl: string;
-  caption: string;
-}
-
-interface UserProfileProps {
-  user: User;
-  stats: UserStats;
-  posts: Post[];
-}
+import React from "react";
+import styles from "./UserProfile.module.css";
+import type { UserProfileProps } from "../types/type";
+import UserProfileHeader from "./user-profile/UserProfileHeader";
+import UserStatsSection from "./user-profile/UserStatsSection";
+import UserPostsSection from "./user-profile/UserPostsSection";
+import UserInfoSection from "./user-profile/UserInfoSection";
 
 /**
  * ## UI 문제 1: 컴포넌트 리팩토링
@@ -46,46 +24,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
-      <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
-        </div>
-        <div className={styles.userInfoContainer}>
-          <h2 className={styles.username}>{user.username}</h2>
-          <button className={styles.editProfileButton}>프로필 편집</button>
-        </div>
-      </header>
-
+      <UserProfileHeader user={user} />
       {/* 2. 사용자 정보 */}
-      <section className={styles.userInfoSection}>
-        <h1 className={styles.name}>{user.name}</h1>
-        <p className={styles.bio}>{user.bio}</p>
-      </section>
+      <UserInfoSection user={user} />
 
       {/* 3. 사용자 통계 */}
-      <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
-      </section>
+      <UserStatsSection stats={stats} />
 
       {/* 4. 게시물 그리드 */}
-      <main className={styles.postsGrid}>
-        {posts.map(post => (
-          <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-          </div>
-        ))}
-      </main>
+      <UserPostsSection posts={posts} />
     </div>
   );
 };
