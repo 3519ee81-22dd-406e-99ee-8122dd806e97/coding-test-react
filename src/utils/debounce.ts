@@ -19,8 +19,18 @@ export function debounce<T extends (...args: any[]) => any>(func: T, delay: numb
   // Hint: 클로저를 사용하여 타이머 ID를 관리해야 합니다.
   return function(...args: Parameters<T>) {
     // @ts-ignore
-    const context = this;
-    // ...
-    func.apply(context, args);
+    let timer = ReturnType<typeof setTimeout> | null;
+
+    return function (this: any, ...args: Parameters<T>){
+      const context = this;
+
+      if(timer){
+        clearTimeout(timer);
+      }
+
+      timer = setTimeout(() => {
+        func.apply(context, args);
+      }, delay);
+    }
   };
 }
