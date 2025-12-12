@@ -1,5 +1,6 @@
-import React from 'react';
+import { useMemo } from 'react';
 import styles from './UserProfile.module.css';
+import UserProfileStats from './userStats';
 
 // --- 데이터 타입 정의 ---
 interface User {
@@ -10,7 +11,7 @@ interface User {
   avatarUrl: string;
 }
 
-interface UserStats {
+export interface UserStats {
   posts: number;
   followers: number;
   following: number;
@@ -42,7 +43,18 @@ interface UserProfileProps {
  * 4. CSS 모듈을 사용하여 스타일을 관리하세요.
  *
  */
+
+
+
 const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
+
+  const userStatsInfo = useMemo(()=>[
+      {category:stats.posts,text:"게시물"},
+      {category:stats.followers,text:"팔로워"},
+      {category:stats.following,text:"팔로잉"},
+    ]
+  ,[stats])
+
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
@@ -63,20 +75,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
       </section>
 
       {/* 3. 사용자 통계 */}
+
+
       <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
+        {userStatsInfo.map(item => <UserProfileStats key = {item.text} stats={item.category} text = {item.text} />)}
       </section>
+
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>

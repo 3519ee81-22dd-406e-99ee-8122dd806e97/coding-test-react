@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './App.css';
 
 // 과제 컴포넌트 임포트
-import UserProfile from './components/UserProfile';
+import UserProfile from './components/userProfile/UserProfile';
 import ProductSearch from './components/ProductSearch';
 import DataDisplay from './components/DataDisplay';
 import BuggyCart from './components/BuggyCart';
