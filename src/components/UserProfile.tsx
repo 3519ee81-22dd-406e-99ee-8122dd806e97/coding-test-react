@@ -28,6 +28,21 @@ interface UserProfileProps {
   posts: Post[];
 }
 
+interface UserHeaderProps {
+  name: string;
+  username: string;
+  avatarUrl: string;
+}
+interface UserInfoProps {
+  name: string;
+  bio: string;
+}
+interface UserStateProps {
+  stateType: string;
+  state: number;
+}
+interface UserPostDetailProps extends Post {}
+
 /**
  * ## UI 문제 1: 컴포넌트 리팩토링
  *
@@ -46,46 +61,85 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, stats, posts }) => {
   return (
     <div className={styles.profileContainer}>
       {/* 1. 프로필 헤더 */}
-      <header className={styles.profileHeader}>
-        <div className={styles.avatarContainer}>
-          <img src={user.avatarUrl} alt={`${user.name}'s avatar`} className={styles.avatar} />
-        </div>
-        <div className={styles.userInfoContainer}>
-          <h2 className={styles.username}>{user.username}</h2>
-          <button className={styles.editProfileButton}>프로필 편집</button>
-        </div>
-      </header>
+
+      <UserHeader
+        name={user.name}
+        username={user.username}
+        avatarUrl={user.avatarUrl}
+      />
 
       {/* 2. 사용자 정보 */}
-      <section className={styles.userInfoSection}>
-        <h1 className={styles.name}>{user.name}</h1>
-        <p className={styles.bio}>{user.bio}</p>
-      </section>
+      <UserInfo name={user.name} bio={user.bio} />
 
       {/* 3. 사용자 통계 */}
       <section className={styles.statsSection}>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.posts}</span>
-          <span className={styles.statLabel}>게시물</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.followers}</span>
-          <span className={styles.statLabel}>팔로워</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statValue}>{stats.following}</span>
-          <span className={styles.statLabel}>팔로잉</span>
-        </div>
+        <UserState stateType="게시물" state={stats.posts} />
+        <UserState stateType="팔로워" state={stats.followers} />
+        <UserState stateType="팔로잉" state={stats.following} />
       </section>
 
       {/* 4. 게시물 그리드 */}
       <main className={styles.postsGrid}>
-        {posts.map(post => (
-          <div key={post.id} className={styles.postItem}>
-            <img src={post.imageUrl} alt={post.caption} className={styles.postImage} />
-          </div>
+        {posts.map((post) => (
+          <UserPostDetail
+            id={post.id}
+            imageUrl={post.imageUrl}
+            caption={post.caption}
+          />
         ))}
       </main>
+    </div>
+  );
+};
+
+const UserHeader: React.FC<UserHeaderProps> = ({
+  name,
+  username,
+  avatarUrl,
+}) => {
+  return (
+    <header className={styles.profileHeader}>
+      <div className={styles.avatarContainer}>
+        <img
+          src={avatarUrl}
+          alt={`${name}'s avatar`}
+          className={styles.avatar}
+        />
+      </div>
+      <div className={styles.userInfoContainer}>
+        <h2 className={styles.username}>{username}</h2>
+        <button className={styles.editProfileButton}>프로필 편집</button>
+      </div>
+    </header>
+  );
+};
+
+const UserInfo: React.FC<UserInfoProps> = ({ name, bio }) => {
+  return (
+    <section className={styles.userInfoSection}>
+      <h1 className={styles.name}>{name}</h1>
+      <p className={styles.bio}>{bio}</p>
+    </section>
+  );
+};
+
+const UserState: React.FC<UserStateProps> = ({ stateType, state }) => {
+  return (
+    <div className={styles.statItem}>
+      <span className={styles.statValue}>{state}</span>
+      <span className={styles.statLabel}>{stateType}</span>
+    </div>
+  );
+};
+
+const UserPostDetail: React.FC<UserPostDetailProps> = ({
+  id,
+  imageUrl,
+  caption,
+}) => {
+  return (
+    <div key={id} className={styles.postItem}>
+      <img src={imageUrl} alt={caption} className={styles.postImage} />
     </div>
   );
 };
